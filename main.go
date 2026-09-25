@@ -59,6 +59,9 @@ func processLines(lines []string, lenient bool) []Result {
 		}
 
 		name, value, err := ParseHeaderLine(line, lenient)
+		if err == nil {
+			err = ValidateSemantics(name, value, lenient)
+		}
 		results = append(results, Result{Raw: line, Name: name, Value: value, Err: err})
 	}
 

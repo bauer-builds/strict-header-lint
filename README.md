@@ -64,6 +64,16 @@ failed, and `2` on a usage error (no input, unreadable stdin).
   tab); `--lenient` merges it into the previous header's value instead of
   rejecting it.
 
+A handful of headers get an extra, header-specific check on top of the
+generic grammar above:
+
+- `Content-Length` must be `1*DIGIT` (RFC 9110 8.6) - no sign, no
+  separators, no trailing garbage.
+- `Cache-Control` directives must be `token ["=" (token / quoted-string)]`
+  (RFC 9111 5.2), and in strict mode the directive name must be one IANA
+  has registered; `--lenient` allows extension directives that aren't in
+  the list yet.
+
 ## Building
 
 ```
@@ -74,7 +84,7 @@ No third-party dependencies; the standard library is enough.
 
 ## What this doesn't do yet
 
-This first version checks generic field syntax only. It doesn't know that
-`Content-Length` should be all digits, that `Cache-Control` directives come
-from a fixed set, or that `Set-Cookie` has its own grammar layered on top of
-RFC 9110. See the roadmap for what's planned.
+`Content-Length` and `Cache-Control` get header-specific checks; most other
+headers only get the generic field syntax check. Notably `Set-Cookie` still
+has no grammar of its own applied yet, so a malformed cookie string will
+pass as long as it's legal field-content.
