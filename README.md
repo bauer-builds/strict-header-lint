@@ -73,6 +73,13 @@ generic grammar above:
   (RFC 9111 5.2), and in strict mode the directive name must be one IANA
   has registered; `--lenient` allows extension directives that aren't in
   the list yet.
+- `Set-Cookie` must be `cookie-name "=" cookie-value` followed by
+  `"; "`-separated attributes (RFC 6265 4.1.1). The name is a token, the
+  value is cookie-octets (optionally double-quoted), `Expires` is an
+  RFC 1123 date, `Max-Age` starts with a non-zero digit, and `Domain` is a
+  dotted hostname with no leading dot. `--lenient` accepts what browsers
+  store anyway: bare `;` separators, spaces and commas in values, older
+  date formats, `Max-Age=0` and negatives, and a leading dot on `Domain`.
 
 ## Building
 
@@ -84,7 +91,6 @@ No third-party dependencies; the standard library is enough.
 
 ## What this doesn't do yet
 
-`Content-Length` and `Cache-Control` get header-specific checks; most other
-headers only get the generic field syntax check. Notably `Set-Cookie` still
-has no grammar of its own applied yet, so a malformed cookie string will
-pass as long as it's legal field-content.
+`Content-Length`, `Cache-Control`, and `Set-Cookie` get header-specific
+checks; most other headers only get the generic field syntax check. There is
+no JSON output yet, and duplicate singleton headers are not flagged.

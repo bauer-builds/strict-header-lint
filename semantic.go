@@ -41,6 +41,8 @@ func ValidateSemantics(name, value string, lenient bool) error {
 		return validateContentLength(value)
 	case strings.EqualFold(name, "Cache-Control"):
 		return validateCacheControl(value, lenient)
+	case strings.EqualFold(name, "Set-Cookie"):
+		return validateSetCookie(value, lenient)
 	}
 	return nil
 }
